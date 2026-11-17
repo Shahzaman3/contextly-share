@@ -9,6 +9,7 @@ const extensionActions = document.querySelector('#extension-actions');
 const successText = document.querySelector('#success');
 const errorText = document.querySelector('#error');
 const shareId = new URL(location.href).searchParams.get('id');
+const extensionResponseTimeoutMs = 45_000;
 let extensionReady = false;
 
 function decode(value) {
@@ -42,7 +43,7 @@ function askExtension(destination) {
     const timeout = setTimeout(() => {
       window.removeEventListener('message', listener);
       reject(new Error('Contextly did not respond. Reload the extension and try again.'));
-    }, 6000);
+    }, extensionResponseTimeoutMs);
     function listener(event) {
       if (event.source !== window || event.origin !== location.origin || event.data?.type !== 'CONTEXTLY_RECEIVER_RESPONSE' || event.data.requestId !== requestId) return;
       clearTimeout(timeout);
