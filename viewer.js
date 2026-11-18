@@ -105,6 +105,7 @@ async function openThread() {
     document.querySelector('#save').onclick = () => sendToExtension();
     document.querySelector('#chatgpt').onclick = () => sendToExtension('chatgpt');
     document.querySelector('#claude').onclick = () => sendToExtension('claude');
+    document.querySelector('#gemini').onclick = () => sendToExtension('gemini');
     document.querySelector('#copy').onclick = async () => {
       await navigator.clipboard.writeText(contentField.value);
       setMessage('Edited thread copied.');
