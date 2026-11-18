@@ -6,14 +6,140 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src https://izghcfsrkvtxopsfuyic.supabase.co; script-src 'self'; style-src 'unsafe-inline';">
   <title>Private Contextly thread</title>
   <style>
-    :root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#0d0e15;color:#f5f5ff}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px;background:radial-gradient(circle at 70% 0,rgba(122,92,255,.18),transparent 35%),#0d0e15}
-    main{width:min(820px,100%);margin:4vh auto;border:1px solid #2b2d3b;border-radius:22px;background:#14151f;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.35)}
-    .eyebrow{color:#69ddc5;font-size:11px;font-weight:800;letter-spacing:.13em}h1{font-size:28px;margin:10px 0 6px}p{color:#a7aabc;line-height:1.55}
-    label{display:grid;gap:6px;margin-top:16px;color:#9ea2b6;font-size:11px;font-weight:750}input,textarea{width:100%;border:1px solid #303241;border-radius:12px;background:#0f1018;color:#f5f5ff;padding:12px;font:inherit}input{font-size:18px;font-weight:750}textarea{min-height:360px;resize:vertical;color:#d9dae4;font:12px/1.6 ui-monospace,monospace}
-    .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}button{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:11px;padding:11px 15px;background:#f4f3ff;color:#15151e;font-weight:750;cursor:pointer}.secondary{background:#20212d;color:#f5f5ff;border:1px solid #343645}.accent{background:#7465e8;color:white}button:disabled{opacity:.5;cursor:not-allowed}
-    #error{color:#ffc7cc}#success{color:#9af1dd}small{display:block;color:#777b90;margin-top:16px}.extension-note{border:1px solid rgba(81,229,195,.22);border-radius:12px;background:rgba(81,229,195,.06);padding:10px 12px;color:#a7e9da;font-size:12px}
+    :root{color-scheme:dark;font-family:"Avenir Next","SF Pro Display","Segoe UI",sans-serif;background:#0b0b0a;color:#f3f0e8;--canvas:#0b0b0a;--surface:#141411;--paper:#f1ede4;--ink:#181713;--muted:#8e8b83;--line:#2c2a25;--accent:#ff6846;--ease:cubic-bezier(.16,1,.3,1)}
+    *{box-sizing:border-box}[hidden]{display:none!important}html{min-height:100%;background:var(--canvas)}body{margin:0;min-height:100vh;overflow-x:hidden;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),var(--canvas);background-size:100% 64px}button,input,textarea{font:inherit}button{cursor:pointer}.site-header{display:flex;align-items:center;justify-content:space-between;width:min(1120px,calc(100% - 40px));height:76px;margin:auto;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:650;letter-spacing:-.02em}.brand svg{width:30px;height:30px;overflow:visible}.brand path:first-child{fill:none;stroke:rgba(255,104,70,.18);stroke-width:7;filter:blur(4px)}.brand path:last-child{fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.security-pill{border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:#a5a198;font:700 9px/1 "SFMono-Regular",Consolas,monospace;letter-spacing:.11em}.security-pill i{display:inline-block;width:5px;height:5px;margin-right:7px;border-radius:50%;background:#8bcf9a;box-shadow:0 0 9px rgba(139,207,154,.5)}main{position:relative;width:min(1120px,calc(100% - 40px));margin:0 auto;padding:56px 0 70px}.opening{display:grid;justify-items:center;min-height:560px;padding-top:62px;text-align:center;transition:opacity .35s var(--ease),transform .35s var(--ease)}.opening.resolved{position:absolute;opacity:0;transform:translateY(-20px);pointer-events:none}.seal{position:relative;width:184px;height:184px;margin-bottom:30px}.seal::before{position:absolute;inset:26px;border:1px solid #26241f;border-radius:50%;content:"";box-shadow:0 0 90px rgba(255,104,70,.08)}.seal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.seal-glow{fill:none;stroke:rgba(255,104,70,.16);stroke-width:13;filter:blur(7px)}.seal-thread{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:7 7;animation:seal-flow 1.1s linear infinite}.seal-eye{fill:#fff3e6;filter:drop-shadow(0 0 8px rgba(255,104,70,.8));animation:needle-pulse 1.5s ease-in-out infinite}.kicker{margin:0;color:var(--accent);font:750 9px/1 "SFMono-Regular",Consolas,monospace;letter-spacing:.17em}.opening h1{margin:14px 0 8px;font-size:clamp(32px,6vw,58px);font-weight:520;letter-spacing:-.055em}.opening>p:not(.kicker){margin:0;color:var(--muted);font-size:14px}.thread-document{position:relative;display:grid;grid-template-columns:minmax(0,760px) 240px;gap:34px;align-items:start;opacity:0;transform:translateY(30px);transition:opacity .65s var(--ease),transform .65s var(--ease)}.thread-document.visible{opacity:1;transform:none}.document{position:relative;overflow:hidden;border-radius:3px;background:var(--paper);color:var(--ink);box-shadow:0 30px 100px rgba(0,0,0,.38)}.document::before{position:absolute;top:0;bottom:0;left:31px;width:1px;background:rgba(255,104,70,.42);content:""}.document::after{position:absolute;top:47px;left:27px;width:7px;height:7px;border:1px solid var(--accent);border-radius:50%;background:var(--paper);box-shadow:0 0 0 5px rgba(255,104,70,.1);content:""}.document-head{padding:44px 48px 24px 64px;border-bottom:1px solid #d9d4ca}.document-label{color:#b34d35;font:750 9px/1 "SFMono-Regular",Consolas,monospace;letter-spacing:.15em}.title-label{display:block;margin-top:18px}.title-label span,.content-label span{display:block;margin-bottom:7px;color:#7b776e;font:700 9px/1 "SFMono-Regular",Consolas,monospace;letter-spacing:.09em;text-transform:uppercase}.title-label input{width:100%;border:0;outline:0;background:transparent;color:var(--ink);font-size:clamp(25px,4vw,38px);font-weight:530;letter-spacing:-.045em}.viewer-status{margin:9px 0 0;color:#77736b;font-size:12px}.content-label{display:block;padding:28px 48px 38px 64px}.content-label textarea{display:block;width:100%;min-height:520px;resize:vertical;border:0;outline:0;background:transparent;color:#34312b;font:12px/1.72 "SFMono-Regular",Consolas,monospace}.action-rail{position:sticky;top:24px;display:grid;gap:12px}.rail-block{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface)}.rail-block h2{margin:0 0 7px;font-size:12px;font-weight:620}.rail-block p{margin:0;color:#928f86;font-size:11px;line-height:1.5}.actions{display:grid;gap:8px;margin-top:13px}button{display:flex;align-items:center;justify-content:center;min-height:43px;border:1px solid #3a3832;border-radius:9px;padding:0 12px;background:#22211d;color:#f4f0e8;font-size:11px;font-weight:650;transition:transform .18s var(--ease),border-color .18s,background .18s}button:hover{transform:translateY(-1px);border-color:#57534a;background:#292722}button:active{transform:scale(.985)}button.accent{border-color:var(--accent);background:var(--accent);color:#1c120e}button.accent:hover{background:#ff795a}.secondary-actions{grid-template-columns:1fr 1fr}.extension-note{margin-top:11px;border-top:1px solid var(--line);padding-top:11px;color:#85827a;font-size:10px;line-height:1.45}.privacy{display:block;margin-top:12px;color:#6f6c65;font-size:10px;line-height:1.5}.feedback{width:min(760px,100%);margin:14px 0 0;padding:0 4px;font-size:12px}.feedback:empty{display:none}#error{color:#f1a5a5}#success{color:#a8d9a7}.transfer-thread{position:fixed;z-index:20;inset:0;display:none;background:rgba(11,11,10,.84);backdrop-filter:blur(7px);pointer-events:none}.transfer-thread.active{display:block}.transfer-thread svg{width:100%;height:100%}.transfer-shadow{fill:none;stroke:rgba(255,104,70,.18);stroke-width:15;stroke-linecap:round;filter:blur(7px)}.transfer-core{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:9 8;animation:transfer-dash .65s linear infinite}.transfer-thread span{position:absolute;right:32px;bottom:30px;color:var(--accent);font:750 9px/1 "SFMono-Regular",Consolas,monospace;letter-spacing:.16em}.transfer-thread.active path{stroke-dashoffset:0;animation:draw-transfer 1.1s var(--ease) both,transfer-dash .65s 1.1s linear infinite}.transfer-thread.active circle{animation:needle-pulse .8s 1s ease-in-out infinite}@keyframes seal-flow{to{stroke-dashoffset:-28}}@keyframes needle-pulse{0%,100%{transform:scale(.8);opacity:.55}50%{transform:scale(1.3);opacity:1}}@keyframes draw-transfer{from{stroke-dasharray:0 1400}to{stroke-dasharray:1400 0}}@keyframes transfer-dash{to{stroke-dashoffset:-34}}@media(max-width:840px){main{padding-top:30px}.thread-document{grid-template-columns:1fr}.action-rail{position:static;grid-template-columns:1fr 1fr}.rail-block:first-child{grid-column:1/-1}.document{border-radius:2px}.content-label textarea{min-height:420px}}@media(max-width:560px){.site-header,main{width:min(100% - 24px,1120px)}.site-header{height:62px}.security-pill{padding:6px 8px;font-size:7px}.opening{min-height:500px;padding-top:42px}.seal{width:150px;height:150px}.document-head{padding:34px 27px 20px 45px}.content-label{padding:24px 27px 30px 45px}.thread-document{gap:14px}.action-rail{grid-template-columns:1fr}.rail-block:first-child{grid-column:auto}.secondary-actions{grid-template-columns:1fr 1fr}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.transfer-thread{backdrop-filter:none}}
+  </style>
+  <style>
+    .transfer-thread svg { overflow: visible; }
+    .transfer-loose-shadow, .transfer-knot-shadow {
+      fill: none;
+      stroke: rgba(255,104,70,.18);
+      stroke-width: 15;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: blur(7px);
+    }
+    .transfer-loose-core, .transfer-knot-core {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 7px rgba(255,104,70,.7));
+    }
+    .transfer-knot-core { stroke: #ff8968; stroke-width: 3; }
+    .transfer-knot { transform-box: fill-box; transform-origin: center; }
+    .transfer-eye {
+      fill: #fff4e8;
+      stroke: var(--accent);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 8px rgba(255,104,70,.8));
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .transfer-thread.active .transfer-loose-shadow,
+    .transfer-thread.active .transfer-loose-core {
+      stroke-dasharray: 1400;
+      stroke-dashoffset: 1400;
+      animation: open-transfer-tail .92s .36s var(--ease) forwards !important;
+    }
+    .transfer-thread.active .transfer-knot { animation: release-transfer-knot 1.05s .15s var(--ease) forwards; }
+    .transfer-thread.active .transfer-knot-shadow,
+    .transfer-thread.active .transfer-knot-core {
+      stroke-dasharray: 1400;
+      stroke-dashoffset: 0;
+      animation: unfasten-transfer-knot .96s .17s var(--ease) forwards !important;
+    }
+    .transfer-thread.active .transfer-eye {
+      opacity: 0;
+      animation: arrive-transfer-eye .35s 1.18s var(--ease) forwards !important;
+    }
+    @keyframes open-transfer-tail { to { stroke-dashoffset: 0; } }
+    @keyframes unfasten-transfer-knot {
+      0%, 24% { stroke-dashoffset: 0; opacity: 1; }
+      100% { stroke-dashoffset: 1400; opacity: 0; }
+    }
+    @keyframes release-transfer-knot {
+      0% { transform: rotate(0) scale(1); }
+      28% { transform: rotate(2deg) scale(1.04); }
+      100% { transform: rotate(-8deg) scale(.72); }
+    }
+    @keyframes arrive-transfer-eye {
+      0% { opacity: 0; transform: scale(0); }
+      70% { opacity: 1; transform: scale(1.45); }
+      100% { opacity: 1; transform: scale(1); }
+    }
   </style>
 </head>
-<body><main><span class="eyebrow">PRIVATE CONTEXTLY THREAD</span><h1 id="heading">Opening thread…</h1><p id="status">Decrypting in this browser.</p><noscript><p id="error">JavaScript is required to decrypt this private thread.</p></noscript><section id="viewer" hidden><label>Thread name<input id="title" maxlength="200"></label><label>Thread content<textarea id="content" maxlength="500000"></textarea></label><div class="extension-note" id="extension-note">Install or reload Contextly to save and inject this editable thread directly.</div><div class="actions" id="extension-actions" hidden><button class="accent" id="save">Save to Contextly</button><button id="chatgpt">Inject into ChatGPT</button><button id="claude">Inject into Claude</button></div><div class="actions"><button class="secondary" id="copy">Copy</button><button class="secondary" id="download">Download</button></div></section><p id="success"></p><p id="error"></p><small>The thread is decrypted only in this browser. Edits stay local unless you save them to Contextly.</small></main>
-<script src="./viewer.js?v=0520" defer></script></body></html>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><path d="M5 27C8 10 26 5 36 16c9 10-1 24-13 20C10 32 11 18 22 15c10-3 17 8 10 15-6 6-17 1-14-7 2-5 10-5 12 0"/><path d="M5 27C8 10 26 5 36 16c9 10-1 24-13 20C10 32 11 18 22 15c10-3 17 8 10 15-6 6-17 1-14-7 2-5 10-5 12 0"/></svg>
+      <span>Contextly</span>
+    </div>
+    <span class="security-pill"><i></i>ENCRYPTED SNAPSHOT</span>
+  </header>
+  <main>
+    <section class="opening" id="opening">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 184 184">
+          <path class="seal-glow" d="M17 101C23 37 89 18 139 53c48 33 19 101-31 104-55 3-79-56-42-84 34-26 80 8 61 45-17 33-67 23-67-13 0-28 35-39 52-18 13 16 4 38-14 39"/>
+          <path class="seal-thread" d="M17 101C23 37 89 18 139 53c48 33 19 101-31 104-55 3-79-56-42-84 34-26 80 8 61 45-17 33-67 23-67-13 0-28 35-39 52-18 13 16 4 38-14 39"/>
+          <circle class="seal-eye" cx="98" cy="126" r="4"/>
+        </svg>
+      </div>
+      <p class="kicker">PRIVATE CONTEXTLY THREAD</p>
+      <h1 id="heading">Unsealing thread…</h1>
+      <p id="loading-status">Decrypting locally in this browser.</p>
+      <noscript><p>JavaScript is required to decrypt this private thread.</p></noscript>
+    </section>
+
+    <section class="thread-document" id="viewer" hidden>
+      <article class="document">
+        <header class="document-head">
+          <span class="document-label">PORTABLE CONTEXT / EDITABLE</span>
+          <label class="title-label"><span>Thread name</span><input id="title" maxlength="200"></label>
+          <p class="viewer-status" id="viewer-status">Shared checkpoint · Edit or continue when ready</p>
+        </header>
+        <label class="content-label"><span>Thread content</span><textarea id="content" maxlength="500000"></textarea></label>
+      </article>
+
+      <aside class="action-rail">
+        <section class="rail-block">
+          <h2>Continue the thread</h2>
+          <p id="extension-note">Install or reload Contextly to save and inject this editable thread directly.</p>
+          <div class="actions" id="extension-actions" hidden>
+            <button class="accent" id="save">Save to Contextly</button>
+            <button id="chatgpt">Continue in ChatGPT</button>
+            <button id="claude">Continue in Claude</button>
+          </div>
+        </section>
+        <section class="rail-block">
+          <h2>Portable copy</h2>
+          <p>Keep a local version or move it manually.</p>
+          <div class="actions secondary-actions"><button id="copy">Copy</button><button id="download">Download</button></div>
+          <small class="privacy">Decrypted only in this browser. Edits stay local until you save them.</small>
+        </section>
+      </aside>
+    </section>
+    <p class="feedback" id="success"></p>
+    <p class="feedback" id="error"></p>
+  </main>
+
+  <div class="transfer-thread" id="transfer-thread" aria-hidden="true">
+    <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
+      <path class="transfer-loose-shadow" d="M600 430C468 485 514 585 370 616C250 642 217 692 70 700"/>
+      <path class="transfer-loose-core" d="M600 430C468 485 514 585 370 616C250 642 217 692 70 700"/>
+      <g class="transfer-knot">
+        <path class="transfer-knot-shadow" d="M600 420C520 320 445 385 478 480C512 580 645 567 687 474C728 383 660 298 572 326C480 355 482 490 572 531C664 574 756 492 716 399C679 310 560 301 502 380C444 460 513 553 610 535"/>
+        <path class="transfer-knot-core" d="M600 420C520 320 445 385 478 480C512 580 645 567 687 474C728 383 660 298 572 326C480 355 482 490 572 531C664 574 756 492 716 399C679 310 560 301 502 380C444 460 513 553 610 535"/>
+      </g>
+      <path class="transfer-loose-shadow" d="M600 430C725 360 660 264 815 228C930 201 915 124 1144 84"/>
+      <path class="transfer-loose-core" d="M600 430C725 360 660 264 815 228C930 201 915 124 1144 84"/>
+      <circle class="transfer-eye" cx="1144" cy="84" r="6"/>
+    </svg>
+    <span>OPENING THREAD</span>
+  </div>
+  <script src="./viewer.js?v=0601" defer></script>
+</body>
+</html>

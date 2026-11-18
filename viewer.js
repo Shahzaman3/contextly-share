@@ -1,6 +1,8 @@
 const api = 'https://izghcfsrkvtxopsfuyic.supabase.co/functions/v1/thread-share';
+const opening = document.querySelector('#opening');
 const heading = document.querySelector('#heading');
-const statusText = document.querySelector('#status');
+const loadingStatus = document.querySelector('#loading-status');
+const viewerStatus = document.querySelector('#viewer-status');
 const viewer = document.querySelector('#viewer');
 const titleField = document.querySelector('#title');
 const contentField = document.querySelector('#content');
@@ -8,6 +10,7 @@ const extensionNote = document.querySelector('#extension-note');
 const extensionActions = document.querySelector('#extension-actions');
 const successText = document.querySelector('#success');
 const errorText = document.querySelector('#error');
+const transferThread = document.querySelector('#transfer-thread');
 const shareId = new URL(location.href).searchParams.get('id');
 const extensionResponseTimeoutMs = 45_000;
 let extensionReady = false;
@@ -57,20 +60,29 @@ function askExtension(destination) {
 }
 
 async function sendToExtension(destination) {
+  const animationStartedAt = performance.now();
   setMessage('');
   if (!currentThread().title || !currentThread().content) return setMessage('The thread name and content are required.', true);
   try {
-    statusText.textContent = destination ? 'Saving and opening the destination…' : 'Saving to Contextly…';
+    viewerStatus.textContent = destination ? 'Saving and opening the destination…' : 'Saving to Contextly…';
+    transferThread.classList.toggle('active', Boolean(destination));
     await askExtension(destination);
-    statusText.textContent = destination ? 'Saved to Contextly and inserted as an editable draft.' : 'Saved to your Contextly library.';
-    setMessage(statusText.textContent);
+    if (destination && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const remainingAnimation = 1_550 - (performance.now() - animationStartedAt);
+      if (remainingAnimation > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingAnimation));
+    }
+    viewerStatus.textContent = destination ? 'Saved to Contextly and inserted as an editable draft.' : 'Saved to your Contextly library.';
+    setMessage(viewerStatus.textContent);
   } catch (reason) {
-    statusText.textContent = 'Shared checkpoint · Edit or continue when ready';
+    viewerStatus.textContent = 'Shared checkpoint · Edit or continue when ready';
     setMessage(reason instanceof Error ? reason.message : String(reason), true);
+  } finally {
+    window.setTimeout(() => transferThread.classList.remove('active'), 280);
   }
 }
 
 async function openThread() {
+  const animationStartedAt = performance.now();
   try {
     const key = location.hash.slice(1);
     if (!shareId || !key) throw new Error('This private link is incomplete.');
@@ -81,11 +93,15 @@ async function openThread() {
     const cryptoKey = await crypto.subtle.importKey('raw', decode(key), 'AES-GCM', false, ['decrypt']);
     const plaintext = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes.slice(0, 12) }, cryptoKey, bytes.slice(12));
     const thread = JSON.parse(new TextDecoder().decode(plaintext));
-    heading.textContent = 'Shared thread';
-    statusText.textContent = 'Shared checkpoint · Edit or continue when ready';
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const remainingAnimation = 720 - (performance.now() - animationStartedAt);
+      if (remainingAnimation > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingAnimation));
+    }
     titleField.value = thread.title;
     contentField.value = thread.content;
     viewer.hidden = false;
+    requestAnimationFrame(() => viewer.classList.add('visible'));
+    opening.classList.add('resolved');
     document.querySelector('#save').onclick = () => sendToExtension();
     document.querySelector('#chatgpt').onclick = () => sendToExtension('chatgpt');
     document.querySelector('#claude').onclick = () => sendToExtension('claude');
@@ -105,7 +121,7 @@ async function openThread() {
     };
   } catch (reason) {
     heading.textContent = 'Thread unavailable';
-    statusText.textContent = '';
+    loadingStatus.textContent = '';
     setMessage(reason instanceof Error ? reason.message : String(reason), true);
   }
 }
